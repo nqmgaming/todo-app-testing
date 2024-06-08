@@ -105,4 +105,19 @@ class NoteDaoTest {
         assertThat(allNotes).doesNotContain(noteEntity)
     }
 
+    @Test
+    fun getNoteFromDatabaseById_returnNote() = runTest {
+        val noteEntity = NoteEntity(
+            id = 1,
+            title = "title 1",
+            description = "content 1",
+            imageUrl = "image 1",
+            dateAdded = System.currentTimeMillis()
+        )
+        noteDao.upsertNoteEntity(noteEntity = noteEntity)
+
+        val retrievedNote = noteDao.getNoteEntityById(id = 1)
+        assertThat(retrievedNote).isEqualTo(noteEntity)
+    }
+
 }
