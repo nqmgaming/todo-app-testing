@@ -45,7 +45,64 @@ class NoteDaoTest {
     fun getAllNoteFromEmptyDb_returnNoteListIsEmpty() = runTest {
         assertThat(
             noteDao.getAllNoteEntities().isEmpty()
+        ).isTrue()
+    }
+
+    @Test
+    fun getAllNoteFromEmptyDb_returnNoteListIsNotEmpty() = runTest {
+        val note1 = NoteEntity(
+            id = 1,
+            title = "title 1",
+            description = "content 1",
+            imageUrl = "image 1",
+            dateAdded = System.currentTimeMillis()
         )
+        val note2 = NoteEntity(
+            id = 2,
+            title = "title 2",
+            description = "content 2",
+            imageUrl = "image 2",
+            dateAdded = System.currentTimeMillis()
+        )
+        noteDao.upsertNoteEntity(noteEntity = note1)
+        noteDao.upsertNoteEntity(noteEntity = note2)
+
+        val allNotes = noteDao.getAllNoteEntities()
+        assertThat(allNotes).containsExactly(note1, note2)
+    }
+
+    @Test
+    fun upsertNoteToDatabase_returnNoteIsUpsert() = runTest {
+        val originalNote = NoteEntity(
+            id = 1,
+            title = "title 1",
+            description = "content 1",
+            imageUrl = "image 1",
+            dateAdded = System.currentTimeMillis()
+        )
+        noteDao.upsertNoteEntity(noteEntity = originalNote)
+
+        val updatedNote = originalNote.copy(title = "updated title")
+        noteDao.upsertNoteEntity(noteEntity = updatedNote)
+
+        val retrievedNote = noteDao.getAllNoteEntities().first()
+        assertThat(retrievedNote).isEqualTo(updatedNote)
+    }
+
+    @Test
+    fun deleteNoteFromDatabase_returnNoteIsDelete() = runTest {
+        val noteEntity = NoteEntity(
+            id = 1,
+            title = "title 1",
+            description = "content 1",
+            imageUrl = "image 1",
+            dateAdded = System.currentTimeMillis()
+        )
+        noteDao.upsertNoteEntity(noteEntity = noteEntity)
+        noteDao.deleteNoteEntity(noteEntity = noteEntity)
+
+        val allNotes = noteDao.getAllNoteEntities()
+        assertThat(allNotes).doesNotContain(noteEntity)
     }
 
 }
