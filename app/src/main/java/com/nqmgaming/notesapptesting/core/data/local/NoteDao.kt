@@ -17,4 +17,7 @@ interface NoteDao {
     @Delete
     suspend fun deleteNoteEntity(noteEntity: NoteEntity)
 
+    @Query("SELECT * FROM noteEntity WHERE id = :id")
+    suspend fun getNoteEntityById(id: Int): NoteEntity
+
 }
