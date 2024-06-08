@@ -1,4 +1,4 @@
-package com.nqmgaming.notesapptesting.ui.theme
+package com.nqmgaming.notesapptesting.core.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -120,4 +120,36 @@ class NoteDaoTest {
         assertThat(retrievedNote).isEqualTo(noteEntity)
     }
 
+    @Test
+    fun searchNoteFromDatabase_returnNoteList() = runTest {
+        val note1 = NoteEntity(
+            id = 1,
+            title = "title 1",
+            description = "content 1",
+            imageUrl = "image 1",
+            dateAdded = System.currentTimeMillis()
+        )
+        val note2 = NoteEntity(
+            id = 2,
+            title = "title 2",
+            description = "content 2",
+            imageUrl = "image 2",
+            dateAdded = System.currentTimeMillis()
+        )
+        noteDao.upsertNoteEntity(noteEntity = note1)
+        noteDao.upsertNoteEntity(noteEntity = note2)
+
+        val searchResult = noteDao.searchNoteEntities(query = "title")
+        assertThat(searchResult).containsExactly(note1, note2)
+
+        val searchResult2 = noteDao.searchNoteEntities(query = "1")
+        assertThat(searchResult2).containsExactly(note1)
+
+        val searchResult3 = noteDao.searchNoteEntities(query = "2")
+        assertThat(searchResult3).containsExactly(note2)
+
+        val searchResult4 = noteDao.searchNoteEntities(query = "3")
+        assertThat(searchResult4).isEmpty()
+    }
+
 }

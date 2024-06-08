@@ -20,4 +20,7 @@ interface NoteDao {
     @Query("SELECT * FROM noteEntity WHERE id = :id")
     suspend fun getNoteEntityById(id: Int): NoteEntity
 
+    @Query("SELECT * FROM noteEntity WHERE title LIKE '%' || :query || '%' OR description LIKE '%' || :query || '%'")
+    suspend fun searchNoteEntities(query: String): List<NoteEntity>
+
 }
